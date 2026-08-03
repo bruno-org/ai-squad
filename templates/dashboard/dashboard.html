@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel do Projeto</title>
+<style>
+:root{
+  --green:#134E3A; --green-dark:#0C3A2B; --green-80:#2B614E; --green-10:#D8E2DE;
+  --cream:#F7F5F0; --cream-warm:#EFEBE1;
+  --off-black:#0C0C0C; --gray-90:#1A1A1A; --gray-60:#5E5E5E; --gray-40:#9A9A9A;
+  --gray-20:#BDB8AE; --gray-10:#E8E6E0;
+  --gold:#B08D57; --gold-dark:#8C6F44; --gold-light:#C7A87A;
+  --terra:#A3402E;
+
+  --bg:var(--cream); --surface:#FFFFFF; --ink:var(--off-black); --soft:var(--gray-60);
+  --line:var(--gray-10); --trilho:var(--gray-20);
+  --alto:var(--terra); --moderado:var(--gold); --baixo:var(--green);
+
+  --serif:'Fraunces',Georgia,'Times New Roman',serif;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --ease:cubic-bezier(0.2,0.8,0.2,1);
+  --sombra:0 1px 2px rgba(12,12,12,.04),0 8px 24px rgba(12,12,12,.06);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; padding:44px 28px 32px; background:var(--bg); color:var(--ink);
+  font:400 16px/1.6 var(--sans);
+  overflow-x:hidden;
+}
+/* Nome de projeto ou motivo de risco muito longo empurrava a pagina inteira e
+   criava rolagem horizontal. Palavra sem espaco quebra onde precisar. */
+h1,.sub,.motivo,.itens li,.check li,.risco .nome,.no .rot{overflow-wrap:anywhere}
+.wrap{max-width:1140px;margin:0 auto}
+
+.topo{margin-bottom:38px}
+.eyebrow{
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;
+  color:var(--gold-dark);margin:0 0 10px;
+}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(30px,4vw,44px);line-height:1.06;letter-spacing:-.02em;margin:0 0 10px;color:var(--green)}
+.sub{color:var(--soft);margin:0;font-size:17px;max-width:60ch}
+
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:16px;
+  padding:26px 28px;margin-bottom:20px;box-shadow:var(--sombra);
+}
+h2{
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);
+  margin:0 0 22px;font-weight:700;
+}
+
+/* ---------- trilha ---------- */
+.trilha{position:relative;padding:6px 0 2px}
+/* 27.5px = padding-top da trilha (6) + metade da bolha (23) - metade do trilho (1.5).
+   Mantem a linha exatamente no centro das bolhas. */
+.trilho{
+  position:absolute;left:0;right:0;top:27.5px;height:3px;border-radius:2px;
+  background:var(--trilho);
+}
+.trilho i{
+  display:block;height:100%;border-radius:2px;width:0;
+  background:linear-gradient(90deg,var(--green-80),var(--green));
+  transition:width .9s var(--ease);
+}
+.nos{position:relative;display:flex;justify-content:space-between;gap:4px}
+.no{flex:1;text-align:center;min-width:0}
+.bolha{
+  width:46px;height:46px;margin:0 auto 12px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-weight:700;font-size:17px;
+  background:var(--bg);border:3px solid var(--trilho);color:var(--gray-40);
+  transition:all .5s var(--ease);
+}
+.no .rot{font-size:14px;font-weight:600;letter-spacing:-.01em;line-height:1.25}
+.no .st{font-size:11.5px;color:var(--soft);margin-top:3px;letter-spacing:.02em}
+
+.no[data-s="concluida"] .bolha,
+.no[data-s="concluida_com_ressalva"] .bolha{
+  background:var(--green);border-color:var(--green);color:var(--cream);
+}
+.no[data-s="concluida_com_ressalva"] .bolha{border-color:var(--gold)}
+.no[data-s="em_andamento"] .bolha{
+  background:var(--surface);border-color:var(--gold);color:var(--gold-dark);
+  box-shadow:0 0 0 5px rgba(176,141,87,.16);
+}
+.no[data-s="em_andamento"] .rot{color:var(--green)}
+.no[data-s="em_andamento"] .st{color:var(--gold-dark);font-weight:600}
+.no[data-s="nao_iniciada"] .rot{color:var(--gray-40)}
+
+/* ---------- riscos ---------- */
+.riscos{display:grid;grid-template-columns:repeat(auto-fit,minmax(252px,1fr));gap:16px}
+.risco{border:1px solid var(--line);border-radius:12px;padding:18px;background:var(--bg)}
+.risco .cab{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+.risco .nome{font-family:var(--serif);font-weight:700;font-size:17px;letter-spacing:-.01em}
+.risco .tag{
+  margin-left:auto;font-size:10.5px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;padding:3px 9px;border-radius:99px;
+}
+.medidor{display:flex;gap:4px;margin-bottom:11px}
+.medidor span{flex:1;height:5px;border-radius:3px;background:var(--trilho)}
+.risco .motivo{font-size:14px;color:var(--soft);line-height:1.5;margin:0}
+
+.nv-alto .tag{background:rgba(163,64,46,.12);color:var(--alto)}
+.nv-alto .medidor span:nth-child(-n+3){background:var(--alto)}
+.nv-moderado .tag{background:rgba(176,141,87,.16);color:var(--gold-dark)}
+.nv-moderado .medidor span:nth-child(-n+2){background:var(--moderado)}
+.nv-baixo .tag{background:rgba(19,78,58,.12);color:var(--baixo)}
+.nv-baixo .medidor span:nth-child(-n+1){background:var(--baixo)}
+
+/* ---------- listas ---------- */
+.check{list-style:none;padding:0;margin:0}
+.check li{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.check li:last-child{border-bottom:0}
+.mk{
+  flex:none;width:22px;height:22px;border-radius:50%;display:flex;
+  align-items:center;justify-content:center;font-size:12px;font-weight:700;
+}
+.mk.ok{background:var(--green);color:var(--cream)}
+.mk.off{background:var(--bg);border:2px solid var(--trilho);color:transparent}
+.itens{list-style:none;padding:0;margin:0}
+.itens li{
+  padding:11px 0 11px 20px;position:relative;border-bottom:1px solid var(--line);
+  font-size:15px;line-height:1.5;
+}
+.itens li:last-child{border-bottom:0}
+.itens li::before{
+  content:"";position:absolute;left:0;top:19px;width:7px;height:7px;
+  border-radius:50%;background:var(--gold);
+}
+.vazio{color:var(--soft);font-size:15px;margin:0;font-style:italic}
+.destaque{border-left:4px solid var(--gold)}
+.alerta{border-left:4px solid var(--terra)}
+a{color:var(--green);text-decoration-color:var(--green-10);text-underline-offset:3px}
+
+/* Uma linha por item e um gap unico: assim o respiro entre as quatro linhas
+   e matematicamente identico, e nao a soma de line-height com margem. */
+.rodape{
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  text-align:center;margin-top:34px;padding-top:26px;border-top:1px solid var(--line);
+  color:var(--soft);font-size:13px;line-height:1.35;
+}
+.rodape > *{margin:0}
+.rodape .carimbo{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
+.rodape .versao{
+  font-size:11px;letter-spacing:.1em;color:var(--soft);opacity:.6;
+}
+.selo{
+  display:flex;align-items:center;gap:10px;width:fit-content;
+}
+.selo .marca{
+  display:flex;align-items:center;
+}
+.selo img{display:block;height:15px;width:auto}
+/* O centro de massa da marca fica em 59% da altura do arquivo, nao em 50%.
+   Centralizar pela caixa deixa o texto visualmente alto, entao compensamos 1px. */
+.selo span{
+  font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  font-weight:600;color:var(--soft);white-space:nowrap;margin-top:1px;opacity:.75;
+}
+
+@media (max-width:860px){
+  body{padding:28px 18px}
+  .trilho{display:none}
+  .nos{flex-direction:column;gap:16px}
+  .no{display:flex;align-items:center;gap:14px;text-align:left}
+  .bolha{margin:0;width:40px;height:40px;font-size:15px}
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <p class="vazio">Carregando o painel...</p>
+</div>
+
+<script src="estado.js"></script>
+<script>
+(function(){
+  var T = {
+    semEstado:"N\u00E3o encontrei os dados deste projeto. O arquivo estado.js precisa estar na mesma pasta deste painel.",
+    projeto:"Projeto",
+    trilha:"Trilha do projeto",
+    riscos:"Riscos do produto",
+    entregaveis:"Entreg\u00E1veis desta fase",
+    pendencias:"Esperando voc\u00EA",
+    lacunas:"O que ficou para tr\u00E1s",
+    interrompido:"Trabalho interrompido",
+    declarados:"Riscos assumidos por voc\u00EA",
+    links:"Links do projeto",
+    producao:"Situa\u00E7\u00E3o da publica\u00E7\u00E3o",
+    noAr:"No ar, liberado depois da auditoria de seguran\u00E7a em ",
+    travado:"Ainda n\u00E3o foi ao ar. O produto s\u00F3 \u00E9 publicado depois de passar pela auditoria de qualidade e seguran\u00E7a, para n\u00E3o expor os dados de quem for usar.",
+    semPendencia:"Nada esperando por voc\u00EA agora.",
+    semRisco:"Nenhum risco assumido at\u00E9 aqui.",
+    rodape:"Painel gerado pelo AI-SQUAD. Ele se atualiza sozinho conforme o projeto avan\u00E7a.",
+    atualizado:"\u00DAltima atualiza\u00E7\u00E3o:",
+    realizacao:"Uma realiza\u00E7\u00E3o",
+    versao:"AI-SQUAD v1.0.0",
+    retomar:"Este trabalho parou no meio e ainda n\u00E3o terminou. Ele continua de onde parou na pr\u00F3xima conversa."
+  };
+  // A trilha e do PROJETO, e comeca na descoberta. O preparo e a instalacao do
+  // AI-SQUAD na maquina: quando este painel existe, ele ja aconteceu. Mostra-lo
+  // aqui misturaria a preparacao da ferramenta com o caminho do produto.
+  var FASES = [
+    {k:"discovery", n:"1", t:"Descoberta"},
+    {k:"delivery",  n:"2", t:"Constru\u00E7\u00E3o"},
+    {k:"qualidade", n:"3", t:"Qualidade e Seguran\u00E7a"},
+    {k:"gtm",       n:"4", t:"Lan\u00E7amento"},
+    {k:"lifecycle", n:"5", t:"Evolu\u00E7\u00E3o"}
+  ];
+  var STATUS = {
+    nao_iniciada:"N\u00E3o come\u00E7ou",
+    em_andamento:"Em andamento",
+    concluida:"Conclu\u00EDda",
+    concluida_com_ressalva:"Conclu\u00EDda com ressalva"
+  };
+  var RISCOS = {
+    negocio:"Neg\u00F3cio", valor:"Valor",
+    usabilidade:"Usabilidade", viabilidade:"Viabilidade t\u00E9cnica"
+  };
+  var NIVEL = {alto:"Alto", moderado:"Moderado", baixo:"Baixo"};
+  var CONCLUIDA = {concluida:1, concluida_com_ressalva:1};
+
+  function esc(s){
+    return String(s==null?"":s).replace(/[&<>"]/g,function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];
+    });
+  }
+  // Rotulos canonicos dos entregaveis de todas as fases, com a grafia correta.
+  // O painel nao confia na chave que veio no estado: ele normaliza e traduz.
+  // Assim "prd", "PRD", "prototipo" ou "plano_tecnico" sempre saem certos na tela.
+  var ROTULOS = {
+    "ambiente preparado":"Ambiente preparado", "ambiente":"Ambiente preparado",
+    "projeto criado":"Projeto criado", "repositorio":"Reposit\u00F3rio",
+    "visao":"Vis\u00E3o", "estrategia":"Estrat\u00E9gia",
+    "lean canvas":"Lean Canvas", "modelagem financeira":"Modelagem financeira",
+    "icp":"ICP", "pesquisa":"Pesquisa", "pesquisa com usuarios":"Pesquisa",
+    "prd":"PRD", "prototipo":"Prot\u00F3tipo",
+    "plano tecnico":"Plano t\u00E9cnico", "cenarios de teste":"Cen\u00E1rios de teste",
+    "quatro ps":"Quatro Ps", "4ps":"Quatro Ps",
+    "infraestrutura":"Infraestrutura", "infra":"Infraestrutura",
+    "observabilidade":"Observabilidade", "analytics":"Analytics",
+    "pagamento":"Pagamento", "suite de testes":"Su\u00EDte de testes",
+    "deploy":"Publica\u00E7\u00E3o",
+    "relatorio de qualidade":"Relat\u00F3rio de qualidade",
+    "auditoria de seguranca":"Auditoria de seguran\u00E7a",
+    "evals":"Evals de IA", "evals de ia":"Evals de IA",
+    "reconciliacao":"Reconcilia\u00E7\u00E3o", "plano de lancamento":"Plano de lan\u00E7amento",
+    "material operacional":"Material operacional",
+    "paineis":"Pain\u00E9is de dados", "paineis de dados":"Pain\u00E9is de dados",
+    "dominio":"Dom\u00EDnio", "produto em desenvolvimento":"Produto em desenvolvimento",
+    "compliance e lgpd":"Compliance e LGPD", "lgpd":"Compliance e LGPD",
+    "politica de privacidade":"Pol\u00EDtica de privacidade",
+    "auditoria de conformidade":"Auditoria de conformidade",
+    "produto em producao":"Produto em produ\u00E7\u00E3o", "produto no ar":"Produto em produ\u00E7\u00E3o"
+  };
+
+  // Normaliza para comparar: minusculo, sem acento, sem separador.
+  function chave(s){
+    return String(s||"")
+      .normalize("NFD").replace(/[\u0300-\u036F]/g, "")
+      .replace(/[_-]+/g, " ").replace(/\s+/g, " ")
+      .trim().toLowerCase();
+  }
+
+  // Traduz pelo dicionario. Sem correspondencia, ao menos garante a primeira
+  // letra maiuscula, preservando siglas como PRD que ja vem toda em caixa alta.
+  function rotulo(s){
+    var k = chave(s);
+    if (ROTULOS[k]) return ROTULOS[k];
+    var limpo = String(s||"").replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
+    return limpo.charAt(0).toUpperCase() + limpo.slice(1);
+  }
+  function bloco(titulo, corpo, classe){
+    return '<section class="card '+(classe||"")+'"><h2>'+titulo+"</h2>"+corpo+"</section>";
+  }
+  // Aceita so caminho relativo e endereco http, https ou mailto. Qualquer outro
+  // esquema, inclusive javascript:, vira string vazia e o item sai como texto.
+  function endereco(v){
+    var s = String(v == null ? "" : v).trim();
+    if(!s) return "";
+    if(/^[a-z][a-z0-9+.\-]*:/i.test(s) && !/^(https?|mailto):/i.test(s)) return "";
+    return s;
+  }
+  // Nunca despeja JSON na tela: sem a chave 'descricao', junta os textos do item.
+  // O builder nao tem por que ver estrutura de dado.
+  function frase(it, campo){
+    if(typeof it === "string") return it;
+    if(!it || typeof it !== "object") return String(it == null ? "" : it);
+    if(it[campo]) return String(it[campo]);
+    var partes = [];
+    for(var k in it){
+      if(typeof it[k] === "string" && it[k]) partes.push(it[k]);
+    }
+    return partes.join(" \u00B7 ");
+  }
+  function lista(itens, campo){
+    if(!itens || !Array.isArray(itens) || !itens.length) return null;
+    var h = '<ul class="itens">', vazia = true;
+    for(var i=0;i<itens.length;i++){
+      var t = frase(itens[i], campo);
+      if(!t) continue;
+      vazia = false;
+      h += "<li>"+esc(t)+"</li>";
+    }
+    return vazia ? null : h+"</ul>";
+  }
+
+  var app = document.getElementById("app");
+  var e = window.ESTADO;
+
+  if(!e || !e.projeto){
+    app.innerHTML = '<section class="card"><p class="vazio">'+T.semEstado+"</p></section>";
+    return;
+  }
+
+  var p = e.projeto, out = "";
+
+  out += '<header class="topo">'
+      +  '<p class="eyebrow">'+T.projeto+"</p>"
+      +  "<h1>"+esc(p.nome||T.projeto)+"</h1>"
+      +  '<p class="sub">'+esc(p.descricao_curta||"")+"</p></header>";
+
+  // Trilha. O status de cada fase e deduzido da posicao de fase_atual, porque a
+  // ordem e linear e nao se pula: se o projeto esta na construcao, o preparo e a
+  // descoberta ficaram para tras por definicao. O status escrito no estado ainda
+  // vence quando existe, para preservar casos como "concluida com ressalva".
+  var atual = -1;
+  for(var a=0;a<FASES.length;a++){ if(FASES[a].k === e.fase_atual){ atual = a; break; } }
+  // Durante o preparo o painel ja existe, mas a trilha do projeto ainda nao
+  // comecou. Nesse instante nada esta em andamento, e isso e a verdade.
+  var noPreparo = (e.fase_atual === "bootstrap");
+
+  function statusDaFase(indice){
+    var d = (e.fases && e.fases[FASES[indice].k]) || {};
+    if (noPreparo) return "nao_iniciada";
+    // Sem fase_atual valida nao ha de onde deduzir: vale o que estiver escrito.
+    if (atual < 0) return d.status || "nao_iniciada";
+    // Com fase_atual valida, a posicao manda. O status escrito so refina, nunca
+    // contradiz: uma fase que ficou para tras pode ser "concluida com ressalva",
+    // mas nao pode ser "nao iniciada". Antes daqui o status escrito vencia sempre,
+    // e como o estado nasce com as seis fases em "nao_iniciada", a fase corrente
+    // aparecia como nao comecada no painel do builder.
+    if (indice < atual) {
+      return d.status === "concluida_com_ressalva" ? d.status : "concluida";
+    }
+    if (indice === atual) return "em_andamento";
+    return "nao_iniciada";
+  }
+
+  var feitas = 0;
+  for(var i=0;i<FASES.length;i++){ if(CONCLUIDA[statusDaFase(i)]) feitas++; }
+  var pct = FASES.length > 1 ? (feitas/(FASES.length-1))*100 : 0;
+  if(pct > 100) pct = 100;
+
+  var tr = '<div class="trilha"><div class="trilho"><i id="progresso"></i></div><div class="nos">';
+  for(var j=0;j<FASES.length;j++){
+    var f = FASES[j];
+    var st = statusDaFase(j);
+    var marca = CONCLUIDA[st] ? "&#10003;" : f.n;
+    tr += '<div class="no" data-s="'+esc(st)+'">'
+       +  '<div class="bolha">'+marca+"</div>"
+       +  '<div class="rot">'+f.t+"</div>"
+       +  '<div class="st">'+(STATUS[st]||st)+"</div></div>";
+  }
+  out += bloco(T.trilha, tr+"</div></div>");
+
+  // riscos
+  if(e.riscos){
+    var rs = '<div class="riscos">';
+    for(var k in RISCOS){
+      if(!e.riscos[k]) continue;
+      var r = e.riscos[k], nv = r.nivel || "alto";
+      rs += '<article class="risco nv-'+esc(nv)+'"><div class="cab">'
+         +  '<span class="nome">'+RISCOS[k]+"</span>"
+         +  '<span class="tag">'+(NIVEL[nv]||esc(nv))+"</span></div>"
+         +  '<div class="medidor"><span></span><span></span><span></span></div>'
+         +  '<p class="motivo">'+esc(r.motivo||"")+"</p></article>";
+    }
+    out += bloco(T.riscos, rs+"</div>");
+  }
+
+  // entregaveis da fase atual
+  var fa = e.fases && e.fases[e.fase_atual];
+  if(fa && fa.entregaveis){
+    var ent = '<ul class="check">';
+    for(var ek in fa.entregaveis){
+      var it2 = fa.entregaveis[ek];
+      var nome = esc(rotulo(ek));
+      var alvo = endereco(it2.caminho);
+      var txt = alvo ? '<a href="'+esc(alvo)+'">'+nome+"</a>" : nome;
+      ent += '<li><span class="mk '+(it2.feito?"ok":"off")+'">&#10003;</span><span>'+txt+"</span></li>";
+    }
+    out += bloco(T.entregaveis, ent+"</ul>");
+  }
+
+  // situacao da publicacao: so aparece depois que a construcao comecou, porque
+  // antes disso nao existe produto para estar no ar nem para estar travado.
+  var FASE_CONSTRUIU = {delivery:1, qualidade:1, gtm:1, lifecycle:1};
+  if(FASE_CONSTRUIU[e.fase_atual]){
+    var pr = e.producao || {};
+    var corpo;
+    if(pr.liberada){
+      corpo = "<p>" + T.noAr + esc(pr.liberada_em || "") + ".</p>";
+      var alvoProd = endereco(e.infra && e.infra.url_producao);
+      if(alvoProd){
+        corpo += '<p><a href="'+esc(alvoProd)+'" target="_blank" rel="noopener">'
+              +  esc(alvoProd)+"</a></p>";
+      }
+    } else {
+      corpo = '<p class="vazio">'+T.travado+"</p>";
+    }
+    out += bloco(T.producao, corpo, pr.liberada ? "" : "alerta");
+  }
+
+  if(e.trabalho_interrompido){
+    var ti = e.trabalho_interrompido;
+    out += bloco(T.interrompido,
+      "<p>"+esc(typeof ti==="string"?ti:(ti.descricao||""))+'</p><p class="vazio">'+T.retomar+"</p>",
+      "alerta");
+  }
+
+  out += bloco(T.pendencias,
+    lista(e.pendencias_para_ela,"descricao") || '<p class="vazio">'+T.semPendencia+"</p>",
+    "destaque");
+
+  var lac = lista(e.lacunas,"descricao");
+  if(lac) out += bloco(T.lacunas, lac, "alerta");
+
+  out += bloco(T.declarados,
+    lista(e.riscos_declarados,"descricao") || '<p class="vazio">'+T.semRisco+"</p>");
+
+  if(e.links && e.links.length){
+    var lk = '<ul class="itens">';
+    for(var m=0;m<e.links.length;m++){
+      var l = e.links[m];
+      var url = endereco(l.url||l), rot = esc(l.rotulo||l.url||l);
+      lk += url
+          ? '<li><a href="'+esc(url)+'" target="_blank" rel="noopener">'+rot+"</a></li>"
+          : "<li>"+rot+"</li>";
+    }
+    out += bloco(T.links, lk+"</ul>");
+  }
+
+  out += '<footer class="rodape"><p>'+T.rodape+"</p>";
+  if(e.ultima_atualizacao){
+    out += "<p>"+T.atualizado+' <span class="carimbo">'+esc(e.ultima_atualizacao)+"</span></p>";
+  }
+  out += '<p class="versao">'+T.versao+"</p>";
+  out += '<div class="selo"><span>'+T.realizacao+"</span>"
+      +  '<span class="marca"><img src="prodman-logo.png" alt="ProdMan"></span></div>';
+  out += "</footer>";
+
+  app.innerHTML = out;
+
+  var barra = document.getElementById("progresso");
+  if(barra) requestAnimationFrame(function(){ barra.style.width = pct.toFixed(1)+"%"; });
+})();
+</script>
+</body>
+</html>

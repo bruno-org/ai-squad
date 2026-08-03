@@ -1,0 +1,20 @@
+{
+  "name": "ai-squad",
+  "version": "1.0.0",
+  "description": "Squad de produto digital completa: conduz uma pessoa não técnica do zero até o produto no ar, com discovery, construção, qualidade, segurança, lançamento e gestão do ciclo de vida.",
+  "author": {
+    "name": "ProdMan"
+  },
+  "license": "MIT",
+  "skills": [
+    "./skills/ai-squad",
+    "./skills/aisquad-bootstrap",
+    "./skills/aisquad-discovery",
+    "./skills/aisquad-design",
+    "./skills/aisquad-compliance",
+    "./skills/aisquad-delivery",
+    "./skills/aisquad-qualidade",
+    "./skills/aisquad-gtm",
+    "./skills/aisquad-lifecycle"
+  ]
+}

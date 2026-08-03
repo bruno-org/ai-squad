@@ -1,0 +1,8 @@
+# Bancada de eval: ferramenta interna de QA, nao faz parte do produto que se
+# instala. Contem transcricoes de teste e dados internos que nao devem ser
+# publicados.
+bancada/
+
+# Python
+__pycache__/
+*.pyc

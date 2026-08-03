@@ -147,17 +147,20 @@ a{color:var(--green);text-decoration-color:var(--green-10);text-underline-offset
   font-size:11px;letter-spacing:.1em;color:var(--soft);opacity:.6;
 }
 .selo{
-  display:flex;align-items:center;gap:10px;width:fit-content;
+  display:flex;align-items:center;gap:7px;width:fit-content;
 }
 .selo .marca{
   display:flex;align-items:center;
 }
 .selo img{display:block;height:15px;width:auto}
-/* O centro de massa da marca fica em 59% da altura do arquivo, nao em 50%.
-   Centralizar pela caixa deixa o texto visualmente alto, entao compensamos 1px. */
-.selo span{
-  font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
-  font-weight:600;color:var(--soft);white-space:nowrap;margin-top:1px;opacity:.75;
+/* So o primeiro span e o texto: o segundo embrulha a imagem. Sem o seletor de
+   filho direto, a regra pegava os dois e qualquer ajuste de alinhamento se
+   anulava. line-height:1 cola a caixa nas letras: texto em caixa alta nao tem
+   descendente, e a sobra que a linha reserva embaixo jogava a frase para cima. */
+.selo > span:first-child{
+  font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;line-height:1;
+  font-weight:600;color:var(--soft);white-space:nowrap;opacity:.75;
+  margin-top:3px;
 }
 
 @media (max-width:860px){

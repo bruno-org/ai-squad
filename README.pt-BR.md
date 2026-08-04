@@ -38,7 +38,7 @@ bash instalador/instalar.sh
 powershell -ExecutionPolicy Bypass -File instalador\instalar.ps1
 ```
 
-O instalador copia o sistema para `~/.ai-squad`, instala as skills em `~/.claude/skills` e confere as dependências. Ele não instala nada: quem instala é a fase 0, explicando cada passo.
+O instalador copia o sistema para `~/.ai-squad`, instala as skills em `~/.claude/skills` e confere as dependências. Fora isso ele não instala nada: quem instala o que o projeto precisar é o Preparo, na criação do primeiro projeto, explicando cada passo.
 
 ## Como usar
 
@@ -73,7 +73,10 @@ O painel se regenera sozinho a cada avanço real do projeto. O builder nunca edi
 
 ## O que tem dentro
 
-**Skills próprias**: o orquestrador (decide em que fase entrar e nunca perde o fio), as seis fases, e o especialista de design que entra sempre que uma fatia envolve tela.
+**Skills próprias**: o orquestrador (decide em que fase entrar e nunca perde o fio), as seis fases, e dois especialistas que são chamados de dentro das fases em vez de serem fases próprias:
+
+- **Design**, sempre que houver interface em jogo.
+- **Conformidade legal**, sempre que houver dado de pessoa em jogo, o que é quase sempre. Esse é **obrigatório**, não opcional: roda junto com a auditoria de segurança e trava a produção do mesmo jeito.
 
 **Especialistas contidos**, em `vendor/`, copiados de propósito em vez de instalados como dependência externa (a versão que roda é a que foi testada; dependência que se atualiza sozinha muda o comportamento embaixo dos pés de quem não sabe conferir):
 
@@ -87,13 +90,22 @@ Nenhum desses três especialistas dispara sozinho como skill independente: o orq
 
 ## Princípios
 
+São quatorze, invariantes. Valem em toda fase, o tempo todo, e quando uma instrução colide com um princípio, o princípio ganha.
+
 1. Quem usa decide o produto. O sistema decide a engenharia.
 2. Português claro, o menos técnico possível, sempre.
-3. Ferramenta gratuita e aberta primeiro.
-4. Repositório sempre privado.
-5. Manutenção é automática. Evolução é aprovada.
-6. Autonomia se mede por dano, não por aparência.
-7. Nunca dizer pronto o que não está.
+3. Piloto automático com mão no volante: decisão técnica é tomada sozinha, o builder é interrompido só no que é genuinamente dele.
+4. Ferramenta gratuita e aberta primeiro.
+5. Bootstrap por padrão: dinheiro do próprio bolso, sem investidor, lucro o quanto antes. Conselho de captação nunca é puxado sem ser pedido.
+6. GitHub sempre, repositório sempre privado.
+7. Produção travada até a auditoria de segurança aprovar. Não é recomendação, é trava, e nenhuma autorização do builder destrava.
+8. Editar vence recriar, em código, documento e protótipo.
+9. Um estado, várias projeções: o arquivo de estado é a única fonte da verdade, e painel, README e documentação derivam dele.
+10. Manutenção é autônoma. Evolução é aprovada.
+11. Autonomia se mede por dano, não por aparência.
+12. Nunca dizer pronto o que não está.
+13. A conversa basta, o painel é complemento. Nenhum passo depende de o builder ter aberto o painel.
+14. O builder nunca precisa lembrar: estado, documentação e repositório em dia por padrão, a cada avanço.
 
 ## Como a qualidade é garantida
 
@@ -102,8 +114,10 @@ Antes de qualquer coisa ir para produção, o produto passa por camadas independ
 1. **Auditoria de qualidade** (fase 3): revisão do trabalho da Construção contra o que foi pedido, com a disciplina de teste primeiro de Matt Pocock.
 2. **Auditoria de segurança**: ofensiva completa, três fases e sete subagentes especializados, modelo de ameaça em duas camadas, hardening de infraestrutura.
 3. **Auditoria de conformidade**: quando o produto lida com dado pessoal, verifica se o que é coletado bate com o que a política de privacidade declara, e se os direitos do titular funcionam de verdade.
-4. **Eval de comportamento de IA**, quando o produto tem IA dentro: conjunto de casos reais com resposta boa e ruim de exemplo, juiz automatizado calibrado contra revisão humana antes de confiar nele, e ciclo enxuto que roda o conjunto inteiro nas duas primeiras rodadas e só retesta o que quebrou dali em diante.
-5. **Portão de produção**: nada vai ao ar sem as três primeiras aprovadas. Não é recomendação, é trava, registrada no estado do projeto.
+4. **Eval de comportamento de IA**, quando o produto tem IA dentro: conjunto de casos reais com resposta boa e ruim de exemplo, juiz automatizado calibrado contra revisão humana antes de confiar nele, e o conjunto inteiro rodando a cada rodada, porque todos os casos leem o mesmo texto de instrução e uma correção pensada para um deles muda outro sem avisar.
+5. **Portão de produção**: nada vai ao ar sem todas as camadas acima aprovadas. Não é recomendação, é trava, registrada no estado do projeto.
+
+Aprovar não é publicar, e a separação é de propósito: a Qualidade abre o portão e grava a referência da auditoria, com o produto ainda em desenvolvimento. Quem atravessa o portão é o Lançamento, no momento que o plano de lançamento determinar, e o go-live é o único lugar onde `producao.liberada` vira verdadeiro.
 
 O próprio AI-SQUAD segue essa disciplina: os guardrails do orquestrador (trava de produção sob pressão crescente, recusa a pular fase, resistência a injeção de instrução, entre outros) foram medidos em ciclos sucessivos de avaliação comportamental, cada correção comparada cenário a cenário contra o ciclo anterior antes de ser aceita.
 

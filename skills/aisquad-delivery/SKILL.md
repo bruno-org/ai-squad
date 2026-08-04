@@ -88,7 +88,7 @@ Registre em `infra` no estado, pelo nome exato do campo: `dominio`, `dominio_reg
 - Sentry e PostHog recebendo dado de verdade.
 - Domínio comprado e configurado, se o produto for web.
 - Documentação técnica em dia: arquitetura de cada fatia, decisões com o porquê, e o status de cada tarefa refletindo a realidade, não uma foto de semanas atrás.
-- `producao.liberada` continua `false`. Quem libera é a próxima fase.
+- `producao.liberada` continua `false`. A Qualidade e Segurança, que vem agora, aprova a auditoria mas também não libera: quem põe o produto no ar é o Lançamento, duas fases à frente.
 
 Aí invoque `aisquad-qualidade`. O que você construiu ainda vai ser auditado por quem não confia em você, e é assim que tem que ser.
 

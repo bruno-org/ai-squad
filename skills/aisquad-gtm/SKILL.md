@@ -84,7 +84,7 @@ Quando chegar a hora, nesta ordem:
 1. **Peça o aval para o go-live.** É o momento mais importante do projeto inteiro; não trate como rotina. Explique o que vai acontecer, que o produto passa a ficar acessível para qualquer pessoa, e o que fazer se algo der errado.
 2. Com o aval, faça o merge em `main`, aponte o domínio definitivo, e confirme que o endereço abre com cadeado.
 3. Verifique com os próprios olhos: caminho principal funcionando em produção, Sentry recebendo erro, PostHog recebendo evento.
-4. Escreva no estado: `producao.liberada = true` e `producao.liberada_em` com a data em DD/MM/AAAA.
+4. Escreva no estado: `producao.liberada = true`, `producao.liberada_em` com a data em DD/MM/AAAA, `infra.url_producao` com o endereço que você acabou de conferir, e o entregável `Produto em produção` com `feito: true`. Ele é desta fase, não da Qualidade: quem aprovou não publicou.
 
 Depois deste momento, manutenção sobe sozinha pela esteira e evolução continua passando pelo builder.
 

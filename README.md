@@ -40,7 +40,7 @@ bash instalador/instalar.sh
 powershell -ExecutionPolicy Bypass -File instalador\instalar.ps1
 ```
 
-The installer copies the system to `~/.ai-squad`, installs the skills into `~/.claude/skills`, and checks dependencies. It does not install anything else: phase 0 handles that, explaining each step.
+The installer copies the system to `~/.ai-squad`, installs the skills into `~/.claude/skills`, and checks dependencies. It does not install anything else: Setup handles that when the first project is created, explaining each step.
 
 ## How to use it
 
@@ -75,7 +75,10 @@ The dashboard regenerates itself with every real step forward. The builder never
 
 ## What's inside
 
-**Own skills**: the orchestrator (decides which phase to enter and never loses the thread), the six phases, and the design specialist that steps in whenever a slice involves a screen.
+**Own skills**: the orchestrator (decides which phase to enter and never loses the thread), the six phases, and two specialists that are called from inside the phases instead of being phases of their own:
+
+- **Design**, whenever there is an interface at stake.
+- **Compliance**, whenever there is someone's personal data at stake, which is almost always. This one is **mandatory**, not optional: it runs alongside the security audit and blocks production the same way.
 
 **Bundled specialists**, under `vendor/`, shipped copied on purpose instead of installed as an external dependency (the version that runs is the one that was tested; a dependency that updates itself changes behavior under the feet of someone who has no way to check it):
 
@@ -89,13 +92,22 @@ None of these three specialists fires on its own as an independent skill: the or
 
 ## Principles
 
+Fourteen of them, invariant. They hold in every phase, all the time, and when an instruction collides with a principle, the principle wins.
+
 1. The builder decides the product. The system decides the engineering.
 2. Clear, plain Brazilian Portuguese, as non-technical as possible, always.
-3. Free and open tooling first.
-4. Repository is always private.
-5. Maintenance is autonomous. Evolution is approved.
-6. Autonomy is measured by potential damage, not by appearance.
-7. Never call done what isn't.
+3. Autopilot with a hand on the wheel: technical calls are made alone, the builder is interrupted only for what is genuinely theirs.
+4. Free and open tooling first.
+5. Bootstrap by default: own money, no investor, profitable as early as possible. Fundraising advice is never volunteered.
+6. GitHub always, repository always private.
+7. Production is locked until the security audit approves. Not a recommendation, a lock, and no authorization from the builder unlocks it.
+8. Editing beats rewriting, in code, documents and prototypes alike.
+9. One state, many projections: the state file is the single source of truth, and dashboard, README and documentation derive from it.
+10. Maintenance is autonomous. Evolution is approved.
+11. Autonomy is measured by potential damage, not by appearance.
+12. Never call done what isn't.
+13. The conversation is enough, the dashboard is a complement. No step ever depends on the builder having opened it.
+14. The builder never has to remember: state, docs and repository stay current by default, every step of the way.
 
 ## How quality is guaranteed
 
@@ -104,8 +116,10 @@ Before anything goes to production, the product passes through independent layer
 1. **Quality audit** (phase 3): reviews the Delivery work against what was asked, applying Matt Pocock's test-first discipline.
 2. **Security audit**: full offensive audit, three phases and seven specialized subagents, two-layer threat model, infrastructure hardening.
 3. **Compliance audit**: when the product handles personal data, checks whether what is collected matches what the privacy policy declares, and whether data-subject rights actually work.
-4. **AI behavior eval**, when the product has AI inside: a set of real cases with example good and bad answers, an automated judge calibrated against human review before it is trusted, and a lean cycle that runs the full set on the first two rounds and only retests what broke from there on.
-5. **Production gate**: nothing ships without the first three approved. Not a recommendation, a lock, recorded in the project's state.
+4. **AI behavior eval**, when the product has AI inside: a set of real cases with example good and bad answers, an automated judge calibrated against human review before it is trusted, and the whole set running on every single round, because every case reads the same instruction text and a fix aimed at one of them silently changes another.
+5. **Production gate**: nothing goes live until every layer above has passed. Not a recommendation, a lock, recorded in the project's state.
+
+Approving is not publishing, and the split is deliberate: Quality opens the gate and writes the audit reference, with the product still in development. Walking through the gate is the Launch phase's job, at the moment the launch plan calls for, and the go-live is the only place where `producao.liberada` becomes true.
 
 AI-SQUAD itself follows this discipline: the orchestrator's own guardrails (production lock under escalating pressure, refusal to skip a phase, resistance to prompt injection, among others) were measured across successive behavioral evaluation cycles, each fix compared scenario by scenario against the previous cycle before being accepted.
 

@@ -114,22 +114,25 @@ Dentro da pasta do projeto, em `.ai-squad/`:
 
 **`pendencias_para_ela`** é o que só o builder pode resolver: autenticar numa conta, conversar com uma pessoa, aprovar um deploy, decidir um rumo. É o que o dashboard mostra em destaque.
 
-**`producao.liberada`** é a trava mais importante do estado. Nasce `false` e só vira `true` na fase de Qualidade e Segurança, depois que a auditoria fechou e o builder deu o aval. Enquanto for `false`, nenhum caminho leva a produção: sem merge em `main`, sem domínio apontado, sem link divulgado. Ver princípio 7.
+**`producao.liberada`** é a trava mais importante do estado. Nasce `false` e só vira `true` no **Lançamento**, no momento do go-live, com o aval do builder. Enquanto for `false`, nenhum caminho leva a produção: sem merge em `main`, sem domínio apontado, sem link divulgado. Ver princípio 7.
 
-Nenhuma outra fase escreve neste campo. Se você está no Delivery e sente vontade de liberar, a resposta é não.
+**Aprovar e publicar são dois campos e duas fases.** A Qualidade e Segurança destrava o portão e escreve `producao.auditoria_referencia`, com o produto ainda em desenvolvimento; ela nunca escreve `producao.liberada`. Quem atravessa o portão é o Lançamento, quando o cronograma do plano de lançamento chegar nesse ponto. Nenhuma outra fase escreve nestes campos: se você está no Delivery e sente vontade de liberar, a resposta é não.
 
 **`projeto.financiamento`** nasce `bootstrap` e só vira `investido` se o builder disser que a empreitada tem investidor, sócio capitalista, fomento ou subsídio. Ele existe para a sessão de daqui a três meses não precisar perguntar de novo, e porque a lente de negócio inteira muda com ele: em `bootstrap` a conta é quando isso se paga, em `investido` a conta admite prejuízo planejado. Ver princípio 5.
 
 **`infra.dominio_vence_em`** existe porque domínio vencido derruba o produto sem aviso e o builder não vai lembrar da data. No Ciclo de Vida, avise quando estiver perto.
 
-**Os campos de `infra` e de `producao` se escrevem pelo nome exato.** Quatro deles são fáceis de descrever em prosa e esquecer de gravar, e aí o painel e a sessão seguinte ficam sem a informação:
+**Os campos de `infra` e de `producao` se escrevem pelo nome exato.** Eles são fáceis de descrever em prosa e esquecer de gravar, e aí o painel e a sessão seguinte ficam sem a informação:
 
 | Campo | Quem escreve | Quando |
 |-------|--------------|--------|
 | `infra.url_desenvolvimento` | Delivery | ao publicar em desenvolvimento pela primeira vez |
 | `infra.dominio_registrador` | Delivery | ao comprar o domínio |
 | `infra.dominio_vence_em` | Delivery | ao comprar o domínio, em DD/MM/AAAA |
-| `producao.auditoria_referencia` | Qualidade | ao liberar produção, com o caminho do relatório |
+| `producao.auditoria_referencia` | Qualidade | ao aprovar a auditoria, com o produto ainda em desenvolvimento |
+| `producao.liberada` | Lançamento | no go-live, com o aval do builder |
+| `producao.liberada_em` | Lançamento | no go-live, em DD/MM/AAAA |
+| `infra.url_producao` | Lançamento | no go-live, depois de confirmar que o endereço abre |
 
 ## Os entregáveis de cada fase
 
@@ -140,8 +143,8 @@ Use exatamente estes nomes como chave em `entregaveis`. O painel traduz variaç�
 | bootstrap | `Ambiente preparado`, `Projeto criado`, `Repositório` |
 | discovery | `Visão`, `Estratégia`, `ICP`, `Lean Canvas`, `Modelagem financeira`, `Pesquisa`, `PRD`, `Protótipo`, `Plano técnico`, `Cenários de teste`, `Quatro Ps`, `Compliance e LGPD` |
 | delivery | `Infraestrutura`, `Observabilidade`, `Analytics`, `Pagamento`, `Domínio`, `Política de privacidade`, `Suíte de testes`, `Produto em desenvolvimento` |
-| qualidade | `Relatório de qualidade`, `Auditoria de segurança`, `Evals de IA`, `Auditoria de conformidade`, `Produto em produção` |
-| gtm | `Reconciliação`, `Plano de lançamento`, `Material operacional` |
+| qualidade | `Relatório de qualidade`, `Auditoria de segurança`, `Evals de IA`, `Auditoria de conformidade` |
+| gtm | `Reconciliação`, `Plano de lançamento`, `Material operacional`, `Produto em produção` |
 | lifecycle | `Painéis de dados` |
 
 Liste só os entregáveis que a fase realmente vai produzir. Produto sem IA não tem `Evals de IA`; produto que não cobra não tem `Pagamento`.

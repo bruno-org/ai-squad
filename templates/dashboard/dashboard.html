@@ -192,7 +192,8 @@ a{color:var(--green);text-decoration-color:var(--green-10);text-underline-offset
     declarados:"Riscos assumidos por voc\u00EA",
     links:"Links do projeto",
     producao:"Situa\u00E7\u00E3o da publica\u00E7\u00E3o",
-    noAr:"No ar, liberado depois da auditoria de seguran\u00E7a em ",
+    noAr:"No ar desde ",
+    noArFim:", liberado no lan\u00E7amento depois da auditoria de qualidade e seguran\u00E7a.",
     travado:"Ainda n\u00E3o foi ao ar. O produto s\u00F3 \u00E9 publicado depois de passar pela auditoria de qualidade e seguran\u00E7a, para n\u00E3o expor os dados de quem for usar.",
     semPendencia:"Nada esperando por voc\u00EA agora.",
     semRisco:"Nenhum risco assumido at\u00E9 aqui.",
@@ -405,7 +406,7 @@ a{color:var(--green);text-decoration-color:var(--green-10);text-underline-offset
     var pr = e.producao || {};
     var corpo;
     if(pr.liberada){
-      corpo = "<p>" + T.noAr + esc(pr.liberada_em || "") + ".</p>";
+      corpo = "<p>" + T.noAr + esc(pr.liberada_em || "") + T.noArFim + "</p>";
       var alvoProd = endereco(e.infra && e.infra.url_producao);
       if(alvoProd){
         corpo += '<p><a href="'+esc(alvoProd)+'" target="_blank" rel="noopener">'

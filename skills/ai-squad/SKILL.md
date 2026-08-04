@@ -35,8 +35,8 @@ O caminho é linear e a ordem não se atropela. Cada fase tem uma skill própria
 | 0. Preparo | `aisquad-bootstrap` | ambiente pronto, pasta criada, estado e dashboard vivos |
 | 1. Discovery | `aisquad-discovery` | 4 riscos em moderado ou baixo e os 3 entregáveis fechados |
 | 2. Delivery | `aisquad-delivery` | produto funcional em desenvolvimento, instrumentado |
-| 3. Qualidade e Segurança | `aisquad-qualidade` | auditoria concluída e produto liberado para produção |
-| 4. Go-to-Market | `aisquad-gtm` | plano de lançamento e material operacional prontos |
+| 3. Qualidade e Segurança | `aisquad-qualidade` | auditoria concluída e aprovada, produto ainda em desenvolvimento |
+| 4. Go-to-Market | `aisquad-gtm` | plano e material prontos, e o produto no ar de verdade, com o aval do builder |
 | 5. Ciclo de Vida | `aisquad-lifecycle` | nunca; é contínua |
 
 Dois especialistas não são fases. Você os chama de dentro das fases, e ambos atuam no Discovery, no Delivery, na Qualidade e no Ciclo de Vida:

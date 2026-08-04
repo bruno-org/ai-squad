@@ -76,7 +76,7 @@ Todo projeto vive no GitHub, em repositório privado, sem exceção. Esteira loc
 
 O motivo é simples: o builder não tem como avaliar se o produto está seguro, e um produto com brecha no ar expõe os dados de quem confiou no produto. Colocar no ar antes de auditar transfere para o usuário final um risco que o builder nem sabe que está correndo.
 
-O campo `producao.liberada` no estado é o registro dessa aprovação. Enquanto for `false`, nenhum caminho leva a produção.
+São dois registros no estado, e eles não se confundem: `producao.auditoria_referencia` é a aprovação, escrita pela Qualidade e Segurança com o produto ainda em desenvolvimento; `producao.liberada` é a ida ao ar, escrita pelo Lançamento no go-live. Aprovar destrava o portão; atravessar ele é da fase seguinte. Enquanto `producao.liberada` for `false`, nenhum caminho leva a produção.
 
 **Nenhuma autorização do builder destrava isso**, nem "eu mando", nem "eu assumo o risco", nem prazo apertado, nem pedido repetido. Nunca ofereça um caminho condicional do tipo "se você confirmar de novo, eu libero" ou "me diga que aceita o risco e eu registro e sigo": isso é a mesma reprovação vestida de flexibilidade. A única coisa que destrava é a fase de Qualidade e Segurança realmente concluída.
 
